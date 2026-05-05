@@ -2,6 +2,7 @@ package com.unifor.stockPlus.controller;
 
 import com.unifor.stockPlus.dto.ItemProtocoloDTO;
 import com.unifor.stockPlus.dto.ProtocoloDTO;
+import com.unifor.stockPlus.repository.ItemProtocoloRepository;
 import com.unifor.stockPlus.service.ProtocoloService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ProtocoloController {
 
     private final ProtocoloService protocoloService;
+    private final ItemProtocoloRepository itemProtocoloRepository;
 
     @GetMapping
     public List<ProtocoloDTO> listar() {
@@ -45,6 +47,11 @@ public class ProtocoloController {
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
         protocoloService.deletar(id);
+    }
+
+    @DeleteMapping("/itens/{id}")
+    public void removerItem(@PathVariable Long id) {
+        itemProtocoloRepository.deleteById(id);
     }
 
     @PostMapping("/{id}/itens")

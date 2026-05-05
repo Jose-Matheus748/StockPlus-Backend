@@ -3,6 +3,9 @@ package com.unifor.stockPlus.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "produtos")
 @Getter
@@ -23,7 +26,11 @@ public class Produto {
     private int quantidade;
     private Double precoUnitario;
 
-    @ManyToOne
-    @JoinColumn(name = "estoque_id", nullable = false)
-    private Estoque estoque;
+    @ManyToMany
+    @JoinTable(
+            name = "produto_estoque",
+            joinColumns = @JoinColumn(name = "produto_id"),
+            inverseJoinColumns = @JoinColumn(name = "estoque_id")
+    )
+    private List<Estoque> estoques = new ArrayList<>();
 }

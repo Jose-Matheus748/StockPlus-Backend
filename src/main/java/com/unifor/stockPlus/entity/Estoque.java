@@ -2,6 +2,8 @@ package com.unifor.stockPlus.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,6 +23,6 @@ public class Estoque {
     @JoinColumn(name = "loja_id", nullable = false)
     private Loja loja;
 
-    @OneToMany(mappedBy = "estoque", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Produto> produtos;
+    @ManyToMany(mappedBy = "estoques")
+    private List<Produto> produtos = new ArrayList<>();
 }

@@ -20,6 +20,7 @@ public class ProtocoloService {
     private final ItemProtocoloRepository itemProtocoloRepository;
     private final LojaService lojaService;
 
+    @Transactional
     public List<ProtocoloDTO> listar() {
         return protocoloRepository.findAll()
                 .stream()
@@ -27,6 +28,7 @@ public class ProtocoloService {
                 .toList();
     }
 
+    @Transactional
     public List<ProtocoloDTO> buscarPorLoja(Long lojaId) {
         return protocoloRepository.findByLojaId(lojaId)
                 .stream()
@@ -34,11 +36,13 @@ public class ProtocoloService {
                 .toList();
     }
 
+    @Transactional
     public ProtocoloDTO buscarPorId(Long id) {
         Protocolo protocolo = getEntity(id);
         return mapComItens(protocolo);
     }
 
+    @Transactional
     public ProtocoloDTO criar(ProtocoloDTO dto) {
 
         Loja loja = lojaService.getEntityById(dto.getLojaId());
@@ -74,6 +78,11 @@ public class ProtocoloService {
         protocoloRepository.deleteById(id);
     }
 
+    public void removerItem(Long id) {
+        itemProtocoloRepository.deleteById(id);
+    }
+
+    @Transactional
     public ProtocoloDTO adicionarItem(Long protocoloId, ItemProtocoloDTO itemDto) {
 
         Protocolo protocolo = getEntity(protocoloId);
@@ -81,7 +90,9 @@ public class ProtocoloService {
         Produto produto = produtoRepository.findById(itemDto.getProdutoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
-        validarProdutoDaLoja(protocolo, produto);
+        if (!produto.getEstoques().isEmpty()) {
+            validarProdutoDaLoja(protocolo, produto);
+        }
 
         ItemProtocolo item = new ItemProtocolo();
         item.setProduto(produto);
@@ -93,10 +104,8 @@ public class ProtocoloService {
         return mapComItens(protocolo);
     }
 
-    // 🔥 MÉTODOS AUXILIARES
 
     private void salvarItens(Protocolo protocolo, List<ItemProtocoloDTO> itensDto) {
-
         if (itensDto == null) return;
 
         for (ItemProtocoloDTO itemDto : itensDto) {
@@ -104,7 +113,9 @@ public class ProtocoloService {
             Produto produto = produtoRepository.findById(itemDto.getProdutoId())
                     .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
-            validarProdutoDaLoja(protocolo, produto);
+            if (!produto.getEstoques().isEmpty()) {
+                validarProdutoDaLoja(protocolo, produto);
+            }
 
             ItemProtocolo item = new ItemProtocolo();
             item.setProduto(produto);
@@ -115,12 +126,11 @@ public class ProtocoloService {
         }
     }
 
-    // 🔥 REGRA CRÍTICA
     private void validarProdutoDaLoja(Protocolo protocolo, Produto produto) {
+        boolean pertenceALoja = produto.getEstoques().stream()
+                .anyMatch(e -> e.getLoja().getId().equals(protocolo.getLoja().getId()));
 
-        if (!produto.getEstoque().getLoja().getId()
-                .equals(protocolo.getLoja().getId())) {
-
+        if (!pertenceALoja) {
             throw new RuntimeException("Produto não pertence à mesma loja do protocolo");
         }
     }

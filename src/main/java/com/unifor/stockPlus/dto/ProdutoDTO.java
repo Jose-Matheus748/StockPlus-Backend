@@ -4,6 +4,9 @@ import com.unifor.stockPlus.entity.Produto;
 import com.unifor.stockPlus.entity.Estoque;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class ProdutoDTO {
@@ -15,8 +18,7 @@ public class ProdutoDTO {
     private String marca;
     private Integer quantidade;
     private Double precoUnitario;
-
-    private Long estoqueId;
+    private List<Long> estoqueIds;
 
     public static ProdutoDTO fromEntity(Produto produto) {
         if (produto == null) return null;
@@ -29,15 +31,15 @@ public class ProdutoDTO {
         dto.setMarca(produto.getMarca());
         dto.setQuantidade(produto.getQuantidade());
         dto.setPrecoUnitario(produto.getPrecoUnitario());
-
-        if (produto.getEstoque() != null) {
-            dto.setEstoqueId(produto.getEstoque().getId());
-        }
-
+        dto.setEstoqueIds(
+                produto.getEstoques().stream()
+                        .map(Estoque::getId)
+                        .toList()
+        );
         return dto;
     }
 
-    public Produto toEntity(Estoque estoque) {
+    public Produto toEntity(List<Estoque> estoques) {
         Produto produto = new Produto();
         produto.setId(this.id);
         produto.setNome(this.nome);
@@ -46,7 +48,7 @@ public class ProdutoDTO {
         produto.setMarca(this.marca);
         produto.setQuantidade(this.quantidade);
         produto.setPrecoUnitario(this.precoUnitario);
-        produto.setEstoque(estoque);
+        produto.setEstoques(new ArrayList<>(estoques)); // ← cópia mutável
         return produto;
     }
 }
