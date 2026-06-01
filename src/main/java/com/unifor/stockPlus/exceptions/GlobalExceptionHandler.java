@@ -1,8 +1,9 @@
 package com.unifor.stockPlus.exceptions;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -10,16 +11,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> notFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
+                .body(new ErrorResponse(ex.getMessage(), 404));
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> badRequest(BadRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+                .body(new ErrorResponse(ex.getMessage(), 400));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(RuntimeException.class)  // ← antes do Exception genérico
+    public ResponseEntity<?> runtime(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(ex.getMessage(), 400));
+    }
+
+    @ExceptionHandler(Exception.class)  // ← por último, mais genérico
     public ResponseEntity<?> general(Exception ex) {
         ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

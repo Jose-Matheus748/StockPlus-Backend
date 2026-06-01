@@ -29,7 +29,7 @@ public class EstoqueController {
                 .body(estoqueService.create(dto, loja));
     }
 
-    @PostMapping("/api/estoque/baixa")
+    @PostMapping("/baixa")
     public void baixarEstoque(@RequestBody BaixaEstoqueDTO dto) {
         estoqueService.baixarPorProtocolo(dto.getProtocoloId());
     }
