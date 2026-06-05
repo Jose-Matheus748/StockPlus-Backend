@@ -23,6 +23,11 @@ public class ProtocoloController {
         return protocoloService.listar();
     }
 
+    @GetMapping("/lote")
+    public List<ProtocoloDTO> buscarPorIds(@RequestParam List<Long> ids) {
+        return protocoloService.buscarPorIds(ids);
+    }
+
     @GetMapping("/{id}")
     public ProtocoloDTO buscarPorId(@PathVariable Long id) {
         return protocoloService.buscarPorId(id);
