@@ -43,6 +43,18 @@ public class ProtocoloService {
     }
 
     @Transactional
+    public List<ProtocoloDTO> buscarPorIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
+        return protocoloRepository.findAllById(ids)
+                .stream()
+                .map(this::mapComItens)
+                .toList();
+    }
+
+    @Transactional
     public ProtocoloDTO criar(ProtocoloDTO dto) {
 
         Loja loja = lojaService.getEntityById(dto.getLojaId());

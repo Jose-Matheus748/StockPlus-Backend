@@ -5,6 +5,7 @@ import com.unifor.stockPlus.entity.*;
 import com.unifor.stockPlus.exceptions.ResourceNotFoundException;
 import com.unifor.stockPlus.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -112,9 +113,24 @@ public class EstoqueService {
         return EstoqueDTO.fromEntity(estoqueRepository.save(estoque));
     }
 
-    public void baixarPorProtocolo(Long protocoloId) {
+    @Transactional
+    public void baixarPorProtocolos(List<Long> protocoloIds) {
+        if (protocoloIds == null || protocoloIds.isEmpty()) {
+            throw new RuntimeException("Informe pelo menos um protocolo para baixar estoque");
+        }
 
-        Protocolo protocolo = protocoloRepository.findById(protocoloId)
+        for (Long protocoloId : protocoloIds) {
+            baixarPorProtocolo(protocoloId);
+        }
+    }
+
+    @Transactional
+    public void baixarPorProtocolo(Long protocoloId) {
+        if (protocoloId == null) {
+            throw new RuntimeException("Protocolo invalido");
+        }
+
+        protocoloRepository.findById(protocoloId)
                 .orElseThrow(() -> new ResourceNotFoundException("Protocolo não encontrado"));
 
         List<ItemProtocolo> itens = itemProtocoloRepository

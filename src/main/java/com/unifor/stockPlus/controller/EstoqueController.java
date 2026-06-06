@@ -31,7 +31,7 @@ public class EstoqueController {
 
     @PostMapping("/baixa")
     public void baixarEstoque(@RequestBody BaixaEstoqueDTO dto) {
-        estoqueService.baixarPorProtocolo(dto.getProtocoloId());
+        estoqueService.baixarPorProtocolos(dto.getProtocoloIds());
     }
 
     @GetMapping("/{id}")
