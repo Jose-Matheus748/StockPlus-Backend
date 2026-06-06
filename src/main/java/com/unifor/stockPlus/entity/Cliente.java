@@ -21,4 +21,7 @@ public class Cliente {
     private String email;
 
     private String senha;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String fotoPerfil;
 }

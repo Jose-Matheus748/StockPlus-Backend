@@ -62,6 +62,7 @@ public class LojaService {
         loja.setNome(dto.getNome());
         loja.setEmail(dto.getEmail());
         loja.setCnpj(dto.getCnpj());
+        loja.setFotoPerfil(dto.getFotoPerfil());
 
         lojaRepository.save(loja);
 

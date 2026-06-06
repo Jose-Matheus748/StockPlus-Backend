@@ -14,6 +14,7 @@ public class LojaDTO {
     private String email;
     private String senha;
     private String cnpj;
+    private String fotoPerfil;
 
     public static LojaDTO fromEntity(Loja loja) {
         if (loja == null) return null;
@@ -23,6 +24,7 @@ public class LojaDTO {
         dto.setNome(loja.getNome());
         dto.setEmail(loja.getEmail());
         dto.setCnpj(loja.getCnpj());
+        dto.setFotoPerfil(loja.getFotoPerfil());
 
         dto.setSenha(null);
 
@@ -36,6 +38,7 @@ public class LojaDTO {
         loja.setEmail(this.email);
         loja.setSenha(this.senha);
         loja.setCnpj(this.cnpj);
+        loja.setFotoPerfil(this.fotoPerfil);
         return loja;
     }
 }

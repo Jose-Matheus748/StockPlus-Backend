@@ -48,6 +48,7 @@ public class ClienteService {
 
         cliente.setNome(dto.getNome());
         cliente.setEmail(dto.getEmail());
+        cliente.setFotoPerfil(dto.getFotoPerfil());
 
         clienteRepository.save(cliente);
 

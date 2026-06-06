@@ -2,6 +2,7 @@ package com.unifor.stockPlus.controller;
 
 import com.unifor.stockPlus.dto.ClienteDTO;
 import com.unifor.stockPlus.dto.LoginRequest;
+import com.unifor.stockPlus.dto.LojaDTO;
 import com.unifor.stockPlus.service.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/clientes")
@@ -54,5 +56,15 @@ public class ClienteController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         clienteService.delete(id);
+    }
+
+    @PatchMapping("/{id}/foto")
+    public ResponseEntity<ClienteDTO> atualizarFoto(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+        ClienteDTO dto = clienteService.getById(id);
+        dto.setFotoPerfil(body.get("fotoPerfil"));
+        ClienteDTO atualizado = clienteService.update(id, dto);
+        return ResponseEntity.ok(atualizado);
     }
 }

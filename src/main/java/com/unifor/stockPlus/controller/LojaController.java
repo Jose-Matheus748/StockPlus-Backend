@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/lojas")
@@ -47,5 +48,15 @@ public class LojaController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         lojaService.delete(id);
+    }
+
+    @PatchMapping("/{id}/foto")
+    public ResponseEntity<LojaDTO> atualizarFoto(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+        LojaDTO dto = lojaService.getById(id);
+        dto.setFotoPerfil(body.get("fotoPerfil"));
+        LojaDTO atualizado = lojaService.update(id, dto);
+        return ResponseEntity.ok(atualizado);
     }
 }

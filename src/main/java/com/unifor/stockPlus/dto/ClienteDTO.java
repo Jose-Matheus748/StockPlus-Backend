@@ -22,6 +22,8 @@ public class ClienteDTO {
     @NotBlank
     private String senha;
 
+    private String fotoPerfil;
+
     public static ClienteDTO fromEntity(Cliente cliente) {
         if (cliente == null) return null;
 
@@ -29,6 +31,7 @@ public class ClienteDTO {
         dto.setId(cliente.getId());
         dto.setNome(cliente.getNome());
         dto.setEmail(cliente.getEmail());
+        dto.setFotoPerfil(cliente.getFotoPerfil());
 
         dto.setSenha(null);
 
@@ -41,6 +44,7 @@ public class ClienteDTO {
         cliente.setNome(this.nome);
         cliente.setEmail(this.email);
         cliente.setSenha(this.senha);
+        cliente.setFotoPerfil(this.fotoPerfil);
         return cliente;
     }
 }

@@ -24,4 +24,7 @@ public class Loja {
 
     @Column(unique = true)
     private String cnpj;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String fotoPerfil;
 }
