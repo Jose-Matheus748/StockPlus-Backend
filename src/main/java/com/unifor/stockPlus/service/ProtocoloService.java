@@ -43,18 +43,6 @@ public class ProtocoloService {
     }
 
     @Transactional
-    public List<ProtocoloDTO> buscarPorIds(List<Long> ids) {
-        if (ids == null || ids.isEmpty()) {
-            return List.of();
-        }
-
-        return protocoloRepository.findAllById(ids)
-                .stream()
-                .map(this::mapComItens)
-                .toList();
-    }
-
-    @Transactional
     public ProtocoloDTO criar(ProtocoloDTO dto) {
 
         Loja loja = lojaService.getEntityById(dto.getLojaId());
@@ -190,5 +178,14 @@ public class ProtocoloService {
         dto.setValorItem(item.getProduto().getPrecoUnitario() * item.getQuantidade());
 
         return dto;
+    }
+
+    // ProtocoloService.java
+    @Transactional
+    public List<ProtocoloDTO> buscarPorIds(List<Long> ids) {
+        return protocoloRepository.findAllById(ids)
+                .stream()
+                .map(this::mapComItens)
+                .toList();
     }
 }
